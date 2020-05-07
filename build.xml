@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="taggerOne" basedir="." default="build.project">
+
+    <!-- project settings -->
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="temp.dir" value="${basedir}/temp"/>
+    <property name="libs.dir" value="${basedir}/libs"/>
+    <property name="classes.dir" value="${temp.dir}/classes"/>
+    <property name="taggerOne.jar" value="taggerOne.jar"/>
+
+    <!-- javac properties -->
+    <property name="javacDebug" value="true"/>
+    <property name="javacFailOnError" value="true"/>
+    <property name="javacVerbose" value="false"/>
+    <property name="javacSource" value="1.8"/>
+    <property name="javacTarget" value="1.8"/>
+
+    <!-- project classpath -->
+    <path id="taggerOne.classpath">
+        <fileset dir="${libs.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- compile source files -->
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac debug="${javacDebug}" failonerror="${javacFailOnError}" verbose="${javacVerbose}" source="${javacSource}" target="${javacTarget}" destdir="${classes.dir}" encoding="UTF8">
+            <classpath refid="taggerOne.classpath"/>
+            <src path="${src.dir}"/>
+        </javac>
+    </target>
+
+    <!-- jar project -->
+    <target name="jar">
+        <jar destfile="${temp.dir}/${taggerOne.jar}">
+            <fileset dir="${classes.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+            <fileset dir="${src.dir}">
+                <include name="*.properties"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <!-- build project -->
+    <target name="build.project">
+        <echo message="Start TaggerOne project build"/>
+
+        <!-- clean any previous build -->
+        <delete dir="${temp.dir}"/>
+        <delete file="${libs.dir}/${taggerOne.jar}"/>
+
+        <!-- compile project -->
+        <antcall target="compile"/>
+
+        <!-- jar project -->
+        <antcall target="jar"/>
+        
+        <!-- copy taggerOne.jar to libs -->
+        <copy file="${temp.dir}/${taggerOne.jar}" todir="${libs.dir}"/>
+        
+        <!-- clean up -->
+        <delete dir="${temp.dir}"/>
+
+        <echo message="End TaggerOne project build"/>
+    </target>
+
+    <!-- test -->
+    <target name="junit" depends="jar">
+        <!-- <junit printsummary="yes" showoutput="true"> -->
+        <junit>
+            <classpath>
+                <path refid="taggerOne.classpath"/>
+                <!-- <path refid="classpath"/> -->
+                <!-- <path refid="application"/> -->
+            </classpath>
+            <formatter type="plain" usefile="false" /> <!-- to screen -->
+
+
+            <batchtest fork="yes" todir=".">
+                <fileset dir="${src.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
+
