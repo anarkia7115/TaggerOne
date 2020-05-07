@@ -49,36 +49,28 @@ public class AbbreviationResolver implements Serializable {
 			return lookupText;
 		}
 		String result = lookupText;
-		List<String> history = new ArrayList<String>();
-		String previous = "";
-		int i = 0;
-		while (!result.equals(previous) && !history.contains(result)) {
-			logger.debug(String.format("While-%d", i));
-			i++;
-			previous = result;
-			history.add(result);
-			for (String abbreviation : abbreviationMap.keySet()) {
-				if (result.contains(abbreviation)) {
-					String replacement = abbreviationMap.get(abbreviation);
-					String updated = null;
-					if (result.contains(replacement)) {
-						// Handles mentions like "von Hippel-Lindau (VHL) disease"
-						// TODO PERFORMANCE Convert these to use Pattern
-						updated = result.replaceAll("\\(?\\b" + Pattern.quote(abbreviation) + "\\b\\)?", "");
-					} else {
-						// TODO PERFORMANCE Convert these to use Pattern
-						updated = result.replaceAll("\\(?\\b" + Pattern.quote(abbreviation) + "\\b\\)?", Matcher.quoteReplacement(replacement));
-					}
-					if (!updated.equals(result)) {
-						logger.trace("Converting \"" + result + "\" to \"" + updated + "\" in document ID " + documentId);
-						result = updated;
-					}
-				}
+
+		// 1. remove all abbreviations for words that has both abbr and replacement
+		for (String abbreviation : abbreviationMap.keySet()) {
+			if (result.contains(abbreviation)) {
+				String replacement = abbreviationMap.get(abbreviation);
+				if (result.contains(replacement)) {
+					// Handles mentions like "von Hippel-Lindau (VHL) disease"
+					// TODO PERFORMANCE Convert these to use Pattern
+					result = result.replaceAll("\\(?\\b" + Pattern.quote(abbreviation) + "\\b\\)?", "");
+				} 
 			}
 		}
-		if (!result.equals(previous)) {
-			logger.error("Abbreviation resolution loop in " + documentId + "; original text = " + lookupText + ", history = " + history);
+
+		// 2. replace all abbr
+		for (String abbreviation : abbreviationMap.keySet()) {
+			if (result.contains(abbreviation)) {
+				String replacement = abbreviationMap.get(abbreviation);
+				// TODO PERFORMANCE Convert these to use Pattern
+				result = result.replaceAll("\\(?\\b" + Pattern.quote(abbreviation) + "\\b\\)?", Matcher.quoteReplacement(replacement));
+			}
 		}
+
 		return result;
 	}
 
