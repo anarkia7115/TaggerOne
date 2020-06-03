@@ -22,7 +22,7 @@ Then the command line below will run the "BC5CDRC" model to find chemicals insid
 
 The found mentions of chemicals will be written to /tmp/pubtatorExample.annotated.txt, as well in the Pubtator format.
 
-The tool allows as web BioC fromat for inpt and output
+The tool allows as well BioC format for inpt and output
 ```
 ./ProcessText.sh Pubtator output/model_BC5CDRC.bin /tmp/pubtatorExample.txt /tmp/pubtatorExample.annotated.txt
 ```
