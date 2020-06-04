@@ -9,20 +9,20 @@ If there's any suggestion, feel free to contact me.
 # Use TaggerOne for annotation of texts
 
 
-The script "ProcessTexts.sh" can be used to run TaggerOne on own texts with a suitable pretrained model.
+The script "ProcessText.sh" can be used to run TaggerOne on own texts with a suitable pre-trained model.
 
-The TaggerOne-0.2.1.tgz file contains several pretrained models and some other NLP data which is required for using ProcessTexts.sh.
+The TaggerOne-0.2.1.tgz file contains several pretrained models and some other NLP data which is required for using ProcessText.sh.
 
-Concretly the two directories "output" (containing pretrained models) and "nlpdata" (containing some NLP data) from inside the tar file need be coppied to the current directory for runnig ProcessTexts.sh
+Concretely the two directories "output" (containing pre-trained models) and "nlpdata" (containing some NLP data) from inside the tar file need be copied to the current directory for running ProcessText.sh
 
-Then the command line below will run the "BC5CDRC" model to find chemicals inside the texts in 
+Then the command line below will, for example, run the "BC5CDRC" model to find chemicals inside the texts in 
 /tmp/pubtatorExample.txt . This file need to be in Pubtator format, which is described here:
 
 [File formats](https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/tmTools/Format.html)
 
 The found mentions of chemicals will be written to /tmp/pubtatorExample.annotated.txt, as well in the Pubtator format.
 
-The tool allows as well BioC format for inpt and output
+The tool allows as well BioC format for input and output.
 ```
 ./ProcessText.sh Pubtator output/model_BC5CDRC.bin /tmp/pubtatorExample.txt /tmp/pubtatorExample.annotated.txt
 ```
